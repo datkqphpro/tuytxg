@@ -16,64 +16,86 @@ text-align:center;
 overflow:hidden;
 }
 
-h1{
-color:white;
-margin-top:25px;
-}
-
-p{
-color:white;
-}
-
-/* vòng tròn */
+h1{color:white;margin-top:20px;}
+p{color:white;}
 
 .circle{
 position:relative;
-width:500px;
-height:500px;
+width:520px;
+height:520px;
 margin:40px auto;
-animation:spin 25s linear infinite;
 }
 
-/* ảnh */
+/* ảnh giữa */
 
-.circle img{
+.center{
 position:absolute;
-width:90px;
-height:90px;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:150px;
+height:150px;
+border-radius:20px;
+box-shadow:0 0 25px rgba(255,255,255,0.9);
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{box-shadow:0 0 10px white;}
+to{box-shadow:0 0 40px white;}
+}
+
+/* ảnh xoay quanh */
+
+.orbit{
+position:absolute;
+width:100px;
+height:100px;
 object-fit:cover;
 border-radius:15px;
-box-shadow:0 6px 15px rgba(0,0,0,0.25);
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
 
 opacity:0;
 transform:scale(0.3);
 transition:0.8s;
 }
 
-.circle img.show{
+.orbit.show{
 opacity:1;
 transform:scale(1);
 }
 
-/* xoay */
-
-@keyframes spin{
-from{ transform:rotate(0deg); }
-to{ transform:rotate(360deg); }
-}
-
 /* hoa rơi */
 
-.flower{
+.petal{
 position:fixed;
-top:-20px;
-font-size:24px;
+top:-50px;
+width:30px;
+pointer-events:none;
 animation:fall linear forwards;
 }
 
 @keyframes fall{
-0%{ transform:translateY(-10vh); }
-100%{ transform:translateY(110vh); }
+0%{transform:translateY(-10vh) rotate(0deg);}
+100%{transform:translateY(110vh) rotate(360deg);}
+}
+
+/* pháo hoa */
+
+.firework{
+position:fixed;
+width:6px;
+height:6px;
+border-radius:50%;
+background:white;
+animation:explode 1s forwards;
+}
+
+@keyframes explode{
+to{
+transform:translate(var(--x),var(--y));
+opacity:0;
+}
 }
 
 /* mobile */
@@ -85,9 +107,14 @@ width:340px;
 height:340px;
 }
 
-.circle img{
-width:70px;
-height:70px;
+.center{
+width:110px;
+height:110px;
+}
+
+.orbit{
+width:65px;
+height:65px;
 }
 
 }
@@ -99,19 +126,20 @@ height:70px;
 <body>
 
 <h1>🌸 Chúc Mừng Ngày 8/3 🌸</h1>
-<p>Chúc Tuýt luôn xinh đẹp và hạnh phúc 💖</p>
+<p>Chúc bạn luôn xinh đẹp và hạnh phúc 💖</p>
 
 <div class="circle">
 
-<img src="1.PNG">
-<img src="2.PNG">
-<img src="3.PNG">
-<img src="4.PNG">
-<img src="5.PNG">
-<img src="6.PNG">
-<img src="7.PNG">
-<img src="8.PNG">
-<img src="9.PNG">
+<img src="1.PNG" class="center">
+
+<img src="2.PNG" class="orbit">
+<img src="3.PNG" class="orbit">
+<img src="4.PNG" class="orbit">
+<img src="5.PNG" class="orbit">
+<img src="6.PNG" class="orbit">
+<img src="7.PNG" class="orbit">
+<img src="8.PNG" class="orbit">
+<img src="9.PNG" class="orbit">
 
 </div>
 
@@ -121,46 +149,104 @@ height:70px;
 
 <script>
 
-const images=document.querySelectorAll(".circle img");
+const images=document.querySelectorAll(".orbit");
 
 const radius=200;
-const center=250;
+const center=260;
 
 images.forEach((img,i)=>{
 
-const angle=(i/9)*Math.PI*2;
+const angle=(i/images.length)*2*Math.PI;
 
-const x=center+radius*Math.cos(angle)-45;
-const y=center+radius*Math.sin(angle)-45;
+const x=center+radius*Math.cos(angle)-50;
+const y=center+radius*Math.sin(angle)-50;
 
 img.style.left=x+"px";
 img.style.top=y+"px";
 
+/* xuất hiện lần lượt */
+
 setTimeout(()=>{
 img.classList.add("show");
-},i*600);
+
+/* pháo hoa khi ảnh cuối */
+
+if(i===images.length-1){
+createFirework();
+}
+
+},i*700);
 
 });
 
-/* hoa rơi */
+/* xoay quanh tâm */
 
-function createFlower(){
+let angle=0;
 
-const flower=document.createElement("div");
-flower.classList.add("flower");
-flower.innerHTML="🌸";
+setInterval(()=>{
 
-flower.style.left=Math.random()*100+"vw";
-flower.style.animationDuration=(Math.random()*3+4)+"s";
-flower.style.fontSize=(Math.random()*15+15)+"px";
+angle+=0.01;
 
-document.body.appendChild(flower);
+images.forEach((img,i)=>{
 
-setTimeout(()=>flower.remove(),7000);
+const a=angle+(i/images.length)*2*Math.PI;
+
+const x=center+radius*Math.cos(a)-50;
+const y=center+radius*Math.sin(a)-50;
+
+img.style.left=x+"px";
+img.style.top=y+"px";
+
+});
+
+},30);
+
+
+/* cánh hoa rơi */
+
+function createPetal(){
+
+const petal=document.createElement("img");
+petal.src="petal.png";
+petal.className="petal";
+
+petal.style.left=Math.random()*100+"vw";
+petal.style.animationDuration=(Math.random()*5+5)+"s";
+
+document.body.appendChild(petal);
+
+setTimeout(()=>petal.remove(),10000);
 
 }
 
-setInterval(createFlower,300);
+setInterval(createPetal,400);
+
+
+/* pháo hoa */
+
+function createFirework(){
+
+for(let i=0;i<80;i++){
+
+const f=document.createElement("div");
+f.className="firework";
+
+const x=(Math.random()-0.5)*400+"px";
+const y=(Math.random()-0.5)*400+"px";
+
+f.style.left="50%";
+f.style.top="50%";
+
+f.style.setProperty("--x",x);
+f.style.setProperty("--y",y);
+
+document.body.appendChild(f);
+
+setTimeout(()=>f.remove(),1000);
+
+}
+
+}
 
 </script>
 
