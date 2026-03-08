@@ -9,71 +9,71 @@
 <style>
 
 body{
-    margin:0;
-    font-family:Arial;
-    background:linear-gradient(135deg,#ff9a9e,#fad0c4,#ffdde1);
-    text-align:center;
-    overflow:hidden;
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#ff9a9e,#fad0c4,#ffdde1);
+text-align:center;
+overflow:hidden;
 }
 
 h1{
-    color:white;
-    margin-top:25px;
+color:white;
+margin-top:25px;
 }
 
 p{
-    color:white;
+color:white;
 }
 
-/* vòng tròn lớn hơn */
+/* vòng tròn */
 
 .circle{
-    position:relative;
-    width:480px;
-    height:480px;
-    margin:40px auto;
-    animation:spin 20s linear infinite;
+position:relative;
+width:500px;
+height:500px;
+margin:40px auto;
+animation:spin 25s linear infinite;
 }
 
 /* ảnh */
 
 .circle img{
-    position:absolute;
-    width:100px;
-    height:100px;
-    object-fit:cover;
-    border-radius:15px;
-    box-shadow:0 6px 15px rgba(0,0,0,0.25);
+position:absolute;
+width:90px;
+height:90px;
+object-fit:cover;
+border-radius:15px;
+box-shadow:0 6px 15px rgba(0,0,0,0.25);
 
-    opacity:0;
-    transform:scale(0.3);
-    transition:0.8s;
+opacity:0;
+transform:scale(0.3);
+transition:0.8s;
 }
 
 .circle img.show{
-    opacity:1;
-    transform:scale(1);
+opacity:1;
+transform:scale(1);
 }
 
 /* xoay */
 
 @keyframes spin{
-    from{ transform:rotate(0deg); }
-    to{ transform:rotate(360deg); }
+from{ transform:rotate(0deg); }
+to{ transform:rotate(360deg); }
 }
 
 /* hoa rơi */
 
 .flower{
-    position:fixed;
-    top:-20px;
-    font-size:24px;
-    animation:fall linear forwards;
+position:fixed;
+top:-20px;
+font-size:24px;
+animation:fall linear forwards;
 }
 
 @keyframes fall{
-    0%{ transform:translateY(-10vh); }
-    100%{ transform:translateY(110vh); }
+0%{ transform:translateY(-10vh); }
+100%{ transform:translateY(110vh); }
 }
 
 /* mobile */
@@ -81,13 +81,13 @@ p{
 @media (max-width:600px){
 
 .circle{
-    width:340px;
-    height:340px;
+width:340px;
+height:340px;
 }
 
 .circle img{
-    width:70px;
-    height:70px;
+width:70px;
+height:70px;
 }
 
 }
@@ -121,49 +121,48 @@ p{
 
 <script>
 
-/* đặt ảnh theo vòng tròn lớn hơn */
+/* đặt ảnh theo vòng tròn */
 
 const images=document.querySelectorAll(".circle img");
-const radius=180;
-const centerX=240;
-const centerY=240;
+
+const radius=200;
+const center=250;
 
 images.forEach((img,i)=>{
 
-    const angle=(i/9)*Math.PI*2;
+const angle=(i/9)*Math.PI*2;
 
-    const x=centerX+radius*Math.cos(angle)-50;
-    const y=centerY+radius*Math.sin(angle)-50;
+const x=center+radius*Math.cos(angle)-45;
+const y=center+radius*Math.sin(angle)-45;
 
-    img.style.left=x+"px";
-    img.style.top=y+"px";
+img.style.left=x+"px";
+img.style.top=y+"px";
 
 });
 
 /* xuất hiện lần lượt */
 
 images.forEach((img,i)=>{
-    setTimeout(()=>{
-        img.classList.add("show");
-    },i*600);
+setTimeout(()=>{
+img.classList.add("show");
+},i*600);
 });
-
 
 /* hoa rơi */
 
 function createFlower(){
 
-    const flower=document.createElement("div");
-    flower.classList.add("flower");
-    flower.innerHTML="🌸";
+const flower=document.createElement("div");
+flower.classList.add("flower");
+flower.innerHTML="🌸";
 
-    flower.style.left=Math.random()*100+"vw";
-    flower.style.animationDuration=(Math.random()*3+4)+"s";
-    flower.style.fontSize=(Math.random()*15+15)+"px";
+flower.style.left=Math.random()*100+"vw";
+flower.style.animationDuration=(Math.random()*3+4)+"s";
+flower.style.fontSize=(Math.random()*15+15)+"px";
 
-    document.body.appendChild(flower);
+document.body.appendChild(flower);
 
-    setTimeout(()=>flower.remove(),7000);
+setTimeout(()=>flower.remove(),7000);
 
 }
 
