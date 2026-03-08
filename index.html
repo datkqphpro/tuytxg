@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -9,69 +10,98 @@
 
 body{
     margin:0;
-    font-family:Arial, sans-serif;
+    font-family:Arial;
     background:linear-gradient(135deg,#ff9a9e,#fad0c4,#ffdde1);
     text-align:center;
+    overflow:hidden;
 }
 
 h1{
     color:white;
-    margin-top:30px;
-    font-size:40px;
+    margin-top:25px;
 }
 
 p{
     color:white;
-    font-size:18px;
-    margin-bottom:30px;
 }
 
-.gallery{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    padding:20px;
-    max-width:800px;
-    margin:auto;
+/* vòng tròn lớn hơn */
+
+.circle{
+    position:relative;
+    width:480px;
+    height:480px;
+    margin:40px auto;
+    animation:spin 20s linear infinite;
 }
 
-.gallery img{
-    width:100%;
+/* ảnh */
+
+.circle img{
+    position:absolute;
+    width:100px;
+    height:100px;
+    object-fit:cover;
     border-radius:15px;
-    box-shadow:0 6px 15px rgba(0,0,0,0.2);
-    transition:0.3s;
+    box-shadow:0 6px 15px rgba(0,0,0,0.25);
+
+    opacity:0;
+    transform:scale(0.3);
+    transition:0.8s;
 }
 
-.gallery img:hover{
-    transform:scale(1.05);
+.circle img.show{
+    opacity:1;
+    transform:scale(1);
 }
 
-footer{
-    color:white;
-    margin:20px;
-    font-size:16px;
+/* xoay */
+
+@keyframes spin{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
 }
 
-/* Mobile */
+/* hoa rơi */
+
+.flower{
+    position:fixed;
+    top:-20px;
+    font-size:24px;
+    animation:fall linear forwards;
+}
+
+@keyframes fall{
+    0%{ transform:translateY(-10vh); }
+    100%{ transform:translateY(110vh); }
+}
+
+/* mobile */
+
 @media (max-width:600px){
-    h1{
-        font-size:28px;
-    }
-    
-    .gallery{
-        grid-template-columns:repeat(2,1fr);
-    }
+
+.circle{
+    width:340px;
+    height:340px;
+}
+
+.circle img{
+    width:70px;
+    height:70px;
+}
+
 }
 
 </style>
+
 </head>
 
 <body>
 
-<h1>💐 Chúc Mừng Ngày 8/3 💐</h1>
-<p>Chúc bạn luôn xinh đẹp, vui vẻ và hạnh phúc mỗi ngày ❤️</p>
+<h1>🌸 Chúc Mừng Ngày 8/3 🌸</h1>
+<p>Chúc bạn luôn xinh đẹp và hạnh phúc 💖</p>
 
-<div class="gallery">
+<div class="circle">
 
 <img src="1.png">
 <img src="2.png">
@@ -85,9 +115,61 @@ footer{
 
 </div>
 
-<footer>
-Chúc một ngày 8/3 thật ý nghĩa 💖
-</footer>
+<audio autoplay loop>
+<source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+/* đặt ảnh theo vòng tròn lớn hơn */
+
+const images=document.querySelectorAll(".circle img");
+const radius=180;
+const centerX=240;
+const centerY=240;
+
+images.forEach((img,i)=>{
+
+    const angle=(i/9)*Math.PI*2;
+
+    const x=centerX+radius*Math.cos(angle)-50;
+    const y=centerY+radius*Math.sin(angle)-50;
+
+    img.style.left=x+"px";
+    img.style.top=y+"px";
+
+});
+
+/* xuất hiện lần lượt */
+
+images.forEach((img,i)=>{
+    setTimeout(()=>{
+        img.classList.add("show");
+    },i*600);
+});
+
+
+/* hoa rơi */
+
+function createFlower(){
+
+    const flower=document.createElement("div");
+    flower.classList.add("flower");
+    flower.innerHTML="🌸";
+
+    flower.style.left=Math.random()*100+"vw";
+    flower.style.animationDuration=(Math.random()*3+4)+"s";
+    flower.style.fontSize=(Math.random()*15+15)+"px";
+
+    document.body.appendChild(flower);
+
+    setTimeout(()=>flower.remove(),7000);
+
+}
+
+setInterval(createFlower,300);
+
+</script>
 
 </body>
 </html>
