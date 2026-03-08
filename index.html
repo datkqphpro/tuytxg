@@ -19,6 +19,16 @@ overflow:hidden;
 h1{color:white;margin-top:20px;}
 p{color:white;}
 
+.container{
+position:fixed;
+left:50%;
+top:55%;
+transform:translate(-50%,-50%);
+width:350px;
+height:350px;
+pointer-events:none;
+}
+
 .photo{
 position:absolute;
 width:90px;
@@ -29,7 +39,7 @@ box-shadow:0 8px 20px rgba(0,0,0,0.3);
 
 opacity:0;
 transform:scale(0.4);
-transition:1s;
+transition:1.5s;
 }
 
 .photo.show{
@@ -40,15 +50,24 @@ transform:scale(1);
 /* trôi nổi */
 
 @keyframes float{
-
-0%{transform:translateY(0px);}
-50%{transform:translateY(-25px);}
-100%{transform:translateY(0px);}
-
+0%{transform:translateY(0)}
+50%{transform:translateY(-20px)}
+100%{transform:translateY(0)}
 }
 
 .float{
-animation:float 5s ease-in-out infinite;
+animation:float 4s ease-in-out infinite;
+}
+
+/* quay vòng */
+
+.rotate{
+animation:spin 25s linear infinite;
+}
+
+@keyframes spin{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
 }
 
 .petal{
@@ -98,20 +117,17 @@ width:65px;
 height:65px;
 }
 
-.petal{
-width:40px;
-}
-
 }
 
 </style>
-
 </head>
 
 <body>
 
 <h1>🌸 Chúc Mừng Ngày 8/3 🌸</h1>
 <p>Chúc Tuýt luôn xinh đẹp và hạnh phúc 💖</p>
+
+<div class="container" id="circle">
 
 <img src="1.PNG" class="photo">
 <img src="2.PNG" class="photo">
@@ -123,6 +139,8 @@ width:40px;
 <img src="8.PNG" class="photo">
 <img src="9.PNG" class="photo">
 
+</div>
+
 <audio id="music" autoplay loop>
 <source src="song.mp3" type="audio/mpeg">
 </audio>
@@ -130,34 +148,58 @@ width:40px;
 <script>
 
 const images=document.querySelectorAll(".photo");
+const container=document.getElementById("circle");
+
+/* xuất hiện ngẫu nhiên */
 
 images.forEach((img,i)=>{
 
-const x=Math.random()*90;
-const y=Math.random()*80;
+img.style.left=Math.random()*100+"vw";
+img.style.top=Math.random()*100+"vh";
 
-img.style.left=x+"vw";
-img.style.top=y+"vh";
+setTimeout(()=>{
+img.classList.add("show");
+img.classList.add("float");
+},i*500);
+
+});
+
+/* sau 5s tụ lại thành vòng tròn */
 
 setTimeout(()=>{
 
-img.classList.add("show");
-img.classList.add("float");
+images.forEach(img=>{
+img.classList.remove("float");
+});
 
-if(i===images.length-1){
-createFirework();
-}
+const radius=120;
 
-},i*600);
+images.forEach((img,i)=>{
+
+const angle=(i/images.length)*Math.PI*2;
+
+const x=175 + radius*Math.cos(angle);
+const y=175 + radius*Math.sin(angle);
+
+img.style.left=x+"px";
+img.style.top=y+"px";
 
 });
+
+container.classList.add("rotate");
+
+createFirework();
+
+},5000);
+
+
+/* hoa đào */
 
 function createPetal(){
 
 for(let i=0;i<3;i++){
 
 const petal=document.createElement("img");
-
 petal.src="petal.png";
 petal.className="petal";
 
@@ -174,12 +216,14 @@ setTimeout(()=>petal.remove(),10000);
 
 setInterval(createPetal,120);
 
+
+/* pháo hoa */
+
 function createFirework(){
 
 for(let i=0;i<100;i++){
 
 const f=document.createElement("div");
-
 f.className="firework";
 
 const x=(Math.random()-0.5)*600+"px";
@@ -189,22 +233,5 @@ f.style.left="50%";
 f.style.top="50%";
 
 f.style.setProperty("--x",x);
-f.style.setProperty("--y",y);
-
-document.body.appendChild(f);
-
-setTimeout(()=>f.remove(),1000);
-
-}
-
-}
-
-document.body.addEventListener("click",()=>{
-document.getElementById("music").play();
-});
-
-</script>
-
-</body>
-</html>
+f.style.setProp
 ```
