@@ -19,11 +19,21 @@ overflow:hidden;
 h1{color:white;margin-top:20px;}
 p{color:white;}
 
-.circle{
+/* vùng xoay */
+
+.container{
 position:relative;
 width:520px;
 height:520px;
 margin:40px auto;
+animation:rotateHeart 25s linear infinite;
+}
+
+/* xoay cả trái tim */
+
+@keyframes rotateHeart{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
 }
 
 /* ảnh giữa */
@@ -36,7 +46,7 @@ transform:translate(-50%,-50%);
 width:150px;
 height:150px;
 border-radius:20px;
-box-shadow:0 0 25px rgba(255,255,255,0.9);
+box-shadow:0 0 20px white;
 animation:glow 2s infinite alternate;
 }
 
@@ -45,19 +55,19 @@ from{box-shadow:0 0 10px white;}
 to{box-shadow:0 0 40px white;}
 }
 
-/* ảnh xoay quanh */
+/* ảnh tim */
 
 .orbit{
 position:absolute;
-width:100px;
-height:100px;
-object-fit:cover;
+width:90px;
+height:90px;
 border-radius:15px;
+object-fit:cover;
 box-shadow:0 5px 15px rgba(0,0,0,0.3);
 
 opacity:0;
 transform:scale(0.3);
-transition:0.8s;
+transition:1s;
 }
 
 .orbit.show{
@@ -65,19 +75,26 @@ opacity:1;
 transform:scale(1);
 }
 
-/* hoa rơi */
+/* hoa đào */
 
 .petal{
 position:fixed;
-top:-50px;
-width:30px;
+top:-60px;
+width:60px;
 pointer-events:none;
 animation:fall linear forwards;
 }
 
 @keyframes fall{
-0%{transform:translateY(-10vh) rotate(0deg);}
-100%{transform:translateY(110vh) rotate(360deg);}
+0%{
+transform:translateY(-10vh) translateX(0px) rotate(0deg);
+}
+50%{
+transform:translateY(50vh) translateX(60px) rotate(180deg);
+}
+100%{
+transform:translateY(110vh) translateX(-60px) rotate(360deg);
+}
 }
 
 /* pháo hoa */
@@ -98,23 +115,21 @@ opacity:0;
 }
 }
 
-/* mobile */
-
 @media (max-width:600px){
 
-.circle{
+.container{
 width:340px;
 height:340px;
 }
 
 .center{
-width:110px;
-height:110px;
+width:100px;
+height:100px;
 }
 
 .orbit{
-width:65px;
-height:65px;
+width:60px;
+height:60px;
 }
 
 }
@@ -126,9 +141,9 @@ height:65px;
 <body>
 
 <h1>🌸 Chúc Mừng Ngày 8/3 🌸</h1>
-<p>Chúc Tuýt luôn xinh đẹp và hạnh phúc 💖</p>
+<p>Chúc bạn luôn xinh đẹp và hạnh phúc 💖</p>
 
-<div class="circle">
+<div class="container">
 
 <img src="1.PNG" class="center">
 
@@ -149,27 +164,26 @@ height:65px;
 
 <script>
 
+/* tạo hình trái tim */
+
 const images=document.querySelectorAll(".orbit");
 
-const radius=200;
-const center=260;
+const centerX=260;
+const centerY=260;
+const scale=10;
 
 images.forEach((img,i)=>{
 
-const angle=(i/images.length)*2*Math.PI;
+const t=(i/images.length)*Math.PI*2;
 
-const x=center+radius*Math.cos(angle)-50;
-const y=center+radius*Math.sin(angle)-50;
+const x=16*Math.pow(Math.sin(t),3);
+const y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
 
-img.style.left=x+"px";
-img.style.top=y+"px";
-
-/* xuất hiện lần lượt */
+img.style.left=centerX+x*scale+"px";
+img.style.top=centerY-y*scale+"px";
 
 setTimeout(()=>{
 img.classList.add("show");
-
-/* pháo hoa khi ảnh cuối */
 
 if(i===images.length-1){
 createFirework();
@@ -179,60 +193,44 @@ createFirework();
 
 });
 
-/* xoay quanh tâm */
 
-let angle=0;
-
-setInterval(()=>{
-
-angle+=0.01;
-
-images.forEach((img,i)=>{
-
-const a=angle+(i/images.length)*2*Math.PI;
-
-const x=center+radius*Math.cos(a)-50;
-const y=center+radius*Math.sin(a)-50;
-
-img.style.left=x+"px";
-img.style.top=y+"px";
-
-});
-
-},30);
-
-
-/* cánh hoa rơi */
+/* hoa đào bay */
 
 function createPetal(){
 
+for(let i=0;i<2;i++){
+
 const petal=document.createElement("img");
+
 petal.src="petal.png";
 petal.className="petal";
 
 petal.style.left=Math.random()*100+"vw";
-petal.style.animationDuration=(Math.random()*5+5)+"s";
+petal.style.animationDuration=(Math.random()*5+6)+"s";
 
 document.body.appendChild(petal);
 
-setTimeout(()=>petal.remove(),10000);
+setTimeout(()=>petal.remove(),12000);
 
 }
 
-setInterval(createPetal,400);
+}
+
+setInterval(createPetal,150);
 
 
 /* pháo hoa */
 
 function createFirework(){
 
-for(let i=0;i<80;i++){
+for(let i=0;i<90;i++){
 
 const f=document.createElement("div");
+
 f.className="firework";
 
-const x=(Math.random()-0.5)*400+"px";
-const y=(Math.random()-0.5)*400+"px";
+const x=(Math.random()-0.5)*500+"px";
+const y=(Math.random()-0.5)*500+"px";
 
 f.style.left="50%";
 f.style.top="50%";
